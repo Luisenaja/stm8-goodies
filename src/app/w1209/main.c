@@ -11,6 +11,8 @@
 #include "pa3_heartbeat.h"
 #include "tiny_timer.h"
 #include "watchdog.h"
+#include "button.h"
+#include "led.h"
 
 static tiny_timer_group_t timer_group;
 static tiny_timer_t timer;
@@ -28,7 +30,9 @@ void main(void) {
     watchdog_init();
     clock_init();
     tiny_timer_group_init(&timer_group, tim4_system_tick_init());
-    pa3_heartbeat_init(&timer_group);
+    led_init();
+    button_init();
+    // pa3_heartbeat_init(&timer_group);
   }
   enableInterrupts();
 
@@ -36,6 +40,8 @@ void main(void) {
 
   while(true) {
     tiny_timer_group_run(&timer_group);
+    led_set_state(true);
+    button_run();
     wfi();
   }
 }
