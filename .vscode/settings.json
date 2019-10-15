@@ -5,6 +5,7 @@
   },
   "editor.formatOnSave": true,
   "files.associations": {
-    "pc5_heartbeat.h": "c"
+    "pc5_heartbeat.h": "c",
+    "button.h": "c"
   }
 }

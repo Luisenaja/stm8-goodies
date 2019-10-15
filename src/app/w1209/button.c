@@ -21,9 +21,9 @@ void button_init(void) {
   tiny_event_init(&press_event);
 }
 
-i_tiny_event_t* button_press_event(void) {
-  return &press_event.interface;
-}
+// i_tiny_event_t* button_press_event(void) {
+//   return &press_event.interface;
+// }
 
 void button_run(void) {
   if(button_pressed()) {
