@@ -14,6 +14,7 @@ SRC_DIRS := \
   src/app/w1209 \
 
 LIB_FILES := \
+  src/peripheral/adc1.c \
   src/peripheral/clock.c \
   src/peripheral/pa3_heartbeat.c \
   src/peripheral/tim4_system_tick.c \

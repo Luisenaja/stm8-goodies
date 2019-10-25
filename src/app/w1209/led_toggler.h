@@ -9,6 +9,11 @@
 #include <stdbool.h>
 #include "i_tiny_event.h"
 
-void led_toggler_init(i_tiny_event_t* button_press_event);
+typedef struct {
+  tiny_event_subscription_t subscription;
+  bool state;
+} led_toggler_t;
+
+void led_toggler_init(led_toggler_t* self, i_tiny_event_t* button_press_event);
 
 #endif

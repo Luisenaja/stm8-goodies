@@ -8,17 +8,13 @@
 #include <stdbool.h>
 #include "buttons.h"
 #include "tiny_event.h"
+#include "tiny_utils.h"
 
 typedef struct {
   tiny_event_t press_event;
   uint8_t pin_mask;
   bool handled_press;
 } button_t;
-
-// static tiny_event_t press_event_3;
-// static tiny_event_t press_event_4;
-// static tiny_event_t press_event_5;
-// static bool handled_press;
 
 static button_t buttons[3];
 
@@ -51,31 +47,13 @@ i_tiny_event_t* off_button_press_event(void) {
   return &buttons[2].press_event.interface;
 }
 
-void buttons_run(void) {
-  // if(button_3_pressed()) {
-  //   if(!handled_press) {
-  //     handled_press = true;
-  //     tiny_event_publish(&press_event_3, NULL);
-  //   }
-  // }
-  // else if(button_4_pressed()) {
-  //   if(!handled_press) {
-  //     handled_press = true;
-  //     tiny_event_publish(&press_event_4, NULL);
-  //   }
-  // }
-  // else if(button_5_pressed()) {
-  //   if(!handled_press) {
-  //     handled_press = true;
-  //     tiny_event_publish(&press_event_5, NULL);
-  //   }
-  // }
-  // else {
-  //   handled_press = false;
-  // }
+static bool button_pressed(button_t* button) {
+  return (GPIOC->IDR & button->pin_mask) == 0;
+}
 
+void buttons_run(void) {
   for(uint8_t i = 0; i < element_count(buttons); i++) {
-    bool pressed = (GPIOC->IDR & buttons[i].pin_mask) == 0;
+    bool pressed = button_pressed(&buttons[i]);
 
     if(pressed) {
       if(!buttons[i].handled_press) {
@@ -84,19 +62,7 @@ void buttons_run(void) {
       }
     }
     else {
-      buttons[i].handled_press;
+      buttons[i].handled_press = false;
     }
   }
 }
-
-// bool button_3_pressed(void) {
-//   return (GPIOC->IDR & pin_3) == 0;
-// }
-
-// bool button_4_pressed(void) {
-//   return (GPIOC->IDR & pin_4) == 0;
-// }
-
-// bool button_5_pressed(void) {
-//   return (GPIOC->IDR & pin_5) == 0;
-// }
