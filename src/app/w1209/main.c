@@ -61,6 +61,7 @@ void main(void) {
     buttons_run();
     thermistor_read();
     temperature = get_temperature();
+    seven_segment_display_69();
     wfi();
   }
 }
