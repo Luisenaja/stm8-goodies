@@ -50,5 +50,21 @@ void thermistor_read(void) {
 }
 
 int get_temperature(void) {
-  return ADC_RAW_TABLE_BASE_TEMP;
+  unsigned char right_bound_temp_index = ADC_RAW_TABLE_SIZE;
+  unsigned char left_bound_temp_index = 0;
+
+  // Search through the raw ADC temperature table
+  while(right_bound_temp_index - left_bound_temp_index > 1) {
+    unsigned char mid_temp_index = ((left_bound_temp_index + right_bound_temp_index) >> 1);
+
+    if(counts > raw_adc_counts[mid_temp_index]) {
+      right_bound_temp_index = mid_temp_index;
+    }
+    else {
+      left_bound_temp_index = mid_temp_index;
+    }
+  }
+
+  // Estimate low if between two values
+  return ADC_RAW_TABLE_BASE_TEMP + left_bound_temp_index;
 }
