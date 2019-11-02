@@ -90,3 +90,9 @@ void seven_segment_display_69(void) {
     delay();
   }
 }
+
+// void seven_segment_display_temp(char* temperature) {
+// }
+
+// void set_digit(int place, char digit) {
+// }

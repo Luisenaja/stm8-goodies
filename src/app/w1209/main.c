@@ -20,10 +20,12 @@
 #include "thermistor.h"
 #include "thermistor_toggler.h"
 #include "seven_segment_display.h"
+#include "display_reading.h"
 
 static tiny_timer_group_t timer_group;
 static tiny_timer_t timer;
 static thermistor_toggler_t thermistor_toggler;
+static display_reading_t display_reading;
 static led_toggler_t button_toggler;
 static led_toggler_t on_button_toggler;
 static led_toggler_t off_button_toggler;
@@ -45,7 +47,8 @@ void main(void) {
     led_init();
     buttons_init();
     thermistor_init();
-    thermistor_toggler_init(&thermistor_toggler, thermistor_read_event());
+    display_reading_init(&display_reading, thermistor_read_event());
+    // thermistor_toggler_init(&thermistor_toggler, thermistor_read_event());
     led_toggler_init(&button_toggler, button_press_event());
     led_toggler_init(&on_button_toggler, on_button_press_event());
     led_toggler_init(&off_button_toggler, off_button_press_event());
@@ -61,7 +64,6 @@ void main(void) {
     buttons_run();
     thermistor_read();
     temperature = get_temperature();
-    seven_segment_display_69();
     wfi();
   }
 }

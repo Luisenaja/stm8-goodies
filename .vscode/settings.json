@@ -6,6 +6,7 @@
   "editor.formatOnSave": true,
   "files.associations": {
     "pc5_heartbeat.h": "c",
-    "button.h": "c"
+    "button.h": "c",
+    "display_reading.h": "c"
   }
 }

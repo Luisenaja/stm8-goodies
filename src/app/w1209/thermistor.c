@@ -13,6 +13,7 @@
 
 #define ADC_RAW_TABLE_SIZE sizeof raw_adc_counts / sizeof raw_adc_counts[0]
 #define ADC_RAW_TABLE_BASE_TEMP 20
+#define ADC_COUNTS_MIN 33587
 
 /* Look-up table for raw ADC counts for every degree between
    20 F and 110 F */
@@ -40,7 +41,7 @@ i_tiny_event_t* thermistor_read_event(void) {
 
 void thermistor_read(void) {
   counts = tiny_adc_group_read(thermistor.adc_group, 6);
-  if(counts > 40000) {
+  if(counts > ADC_COUNTS_MIN) {
     tiny_event_publish(&thermistor.thermistor_read_event, NULL);
     counts++;
   }
