@@ -22,6 +22,7 @@ const unsigned int raw_adc_counts[] = {
 };
 
 static volatile tiny_adc_counts_t counts;
+static int temperature;
 
 typedef struct {
   tiny_event_t thermistor_read_event;
@@ -42,12 +43,15 @@ i_tiny_event_t* thermistor_read_event(void) {
 void thermistor_read(void) {
   counts = tiny_adc_group_read(thermistor.adc_group, 6);
   if(counts > ADC_COUNTS_MIN) {
-    tiny_event_publish(&thermistor.thermistor_read_event, NULL);
+    temperature = get_temperature();
+    tiny_event_publish(&thermistor.thermistor_read_event, &temperature);
     counts++;
   }
   else {
     counts++;
   }
+
+  
 }
 
 int get_temperature(void) {

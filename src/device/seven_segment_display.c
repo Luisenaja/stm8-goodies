@@ -5,6 +5,7 @@
 
 #include "stm8s_gpio.h"
 #include "seven_segment_display.h"
+#include <string.h>
 
 #define init_output(_port, _pin)   \
   GPIO##_port->DDR |= (1 << _pin); \
@@ -53,6 +54,146 @@ void seven_segment_display_init(void) {
   write_output(B, 4, 0); // 3
 }
 
+void seven_segment_display_sect_on(int section) {
+  switch(section) {
+    case 1:
+      write_output(D, 4, 0);
+      break;
+    case 2:
+      write_output(B, 5, 0);
+      break;
+    case 3:
+      write_output(B, 4, 0);
+      break;
+    default:
+      break;
+  }
+}
+
+void seven_segment_display_sect_off(int section) {
+  switch(section) {
+    case 1:
+      write_output(D, 4, 1);
+      break;
+    case 2:
+      write_output(B, 5, 1);
+      break;
+    case 3:
+      write_output(B, 4, 1);
+      break;
+    default:
+      break;
+  }
+}
+
+void seven_segment_display_number(char number) {
+  switch(number) {
+    case '1':
+      write_output(D, 5, 0); // A
+      write_output(A, 2, 1); // B
+      write_output(C, 7, 1); // C
+      write_output(D, 3, 0); // D
+      write_output(D, 1, 0); // E
+      write_output(A, 1, 0); // F
+      write_output(C, 6, 0); // G
+      write_output(D, 2, 0); // P
+      break;
+
+    case '2':
+      write_output(D, 5, 1); // A
+      write_output(A, 2, 1); // B
+      write_output(C, 7, 0); // C
+      write_output(D, 3, 1); // D
+      write_output(D, 1, 1); // E
+      write_output(A, 1, 0); // F
+      write_output(C, 6, 1); // G
+      write_output(D, 2, 0); // P
+      break;
+    
+    case '3':
+      write_output(D, 5, 1); // A
+      write_output(A, 2, 1); // B
+      write_output(C, 7, 1); // C
+      write_output(D, 3, 1); // D
+      write_output(D, 1, 0); // E
+      write_output(A, 1, 0); // F
+      write_output(C, 6, 1); // G
+      write_output(D, 2, 0); // P
+      break;
+
+    case '4':
+      write_output(D, 5, 0); // A
+      write_output(A, 2, 1); // B
+      write_output(C, 7, 1); // C
+      write_output(D, 3, 0); // D
+      write_output(D, 1, 0); // E
+      write_output(A, 1, 1); // F
+      write_output(C, 6, 1); // G
+      write_output(D, 2, 0); // P
+      break;
+
+    case '5':
+      write_output(D, 5, 1); // A
+      write_output(A, 2, 0); // B
+      write_output(C, 7, 1); // C
+      write_output(D, 3, 1); // D
+      write_output(D, 1, 0); // E
+      write_output(A, 1, 1); // F
+      write_output(C, 6, 1); // G
+      write_output(D, 2, 0); // P
+      break;
+
+    case '6':
+      write_output(D, 5, 1); // A
+      write_output(A, 2, 0); // B
+      write_output(C, 7, 1); // C
+      write_output(D, 3, 1); // D
+      write_output(D, 1, 1); // E
+      write_output(A, 1, 1); // F
+      write_output(C, 6, 1); // G
+      write_output(D, 2, 0); // P
+      break;
+
+    case '7':
+      write_output(D, 5, 1); // A
+      write_output(A, 2, 1); // B
+      write_output(C, 7, 1); // C
+      write_output(D, 3, 0); // D
+      write_output(D, 1, 0); // E
+      write_output(A, 1, 0); // F
+      write_output(C, 6, 0); // G
+      write_output(D, 2, 0); // P
+      break;
+
+    case '8':
+      write_output(D, 5, 1); // A
+      write_output(A, 2, 1); // B
+      write_output(C, 7, 1); // C
+      write_output(D, 3, 1); // D
+      write_output(D, 1, 1); // E
+      write_output(A, 1, 1); // F
+      write_output(C, 6, 1); // G
+      write_output(D, 2, 0); // P
+      break;
+
+    case '9':
+      write_output(D, 5, 1); // A
+      write_output(A, 2, 1); // B
+      write_output(C, 7, 1); // C
+      write_output(D, 3, 1); // D
+      write_output(D, 1, 0); // E
+      write_output(A, 1, 1); // F
+      write_output(C, 6, 1); // G
+      write_output(D, 2, 0); // P
+      break;
+
+    default:
+      break;
+
+  }
+
+}
+
 void seven_segment_display_69(void) {
   while(1) {
     // 1 is on, 0 is off
@@ -91,8 +232,53 @@ void seven_segment_display_69(void) {
   }
 }
 
-// void seven_segment_display_temp(char* temperature) {
-// }
+void seven_segment_display_temp(char* temp_str) {
 
-// void set_digit(int place, char digit) {
-// }
+  int length = strlen(temp_str);
+
+  if(length == 1) {
+    seven_segment_display_sect_off(1);
+    seven_segment_display_sect_off(2);
+    seven_segment_display_sect_on(3);
+    seven_segment_display_number(temp_str[0]);
+  }
+
+  if(length == 2) {
+    while(1) {
+      seven_segment_display_sect_off(1);
+      for(int i = 0; i < length; i++) {
+        if(i == 0) {
+          seven_segment_display_sect_on(2);
+          seven_segment_display_sect_off(3);
+        } else if (i == 1) {
+          seven_segment_display_sect_off(2);
+          seven_segment_display_sect_on(3);
+        }
+        seven_segment_display_number(temp_str[i]);
+        delay();
+      }
+    }
+  }
+
+  if(length == 3) {
+    while(1) {
+      for(int i = 0; i < length; i++) {
+        if(i == 0) {
+          seven_segment_display_sect_on(1);
+          seven_segment_display_sect_off(2);
+          seven_segment_display_sect_off(3);
+        } else if (i == 1) {
+          seven_segment_display_sect_off(1);
+          seven_segment_display_sect_on(2);
+          seven_segment_display_sect_off(3);
+        } else if (i == 2) {
+          seven_segment_display_sect_off(1);
+          seven_segment_display_sect_off(2);
+          seven_segment_display_sect_on(3);
+        }
+        seven_segment_display_number(temp_str[i]);
+        delay();
+      }
+    }
+  }
+}

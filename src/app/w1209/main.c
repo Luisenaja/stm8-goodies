@@ -29,7 +29,7 @@ static display_reading_t display_reading;
 static led_toggler_t button_toggler;
 static led_toggler_t on_button_toggler;
 static led_toggler_t off_button_toggler;
-int temperature;
+// int temperature;
 
 static void kick_watchdog(tiny_timer_group_t* _timer_group, void* context) {
   (void)context;
@@ -63,7 +63,7 @@ void main(void) {
     tiny_timer_group_run(&timer_group);
     buttons_run();
     thermistor_read();
-    temperature = get_temperature();
+    // temperature = get_temperature();
     wfi();
   }
 }
