@@ -20,8 +20,7 @@ static void display_reading_callback(void* context, const void* args) {
   char buffer[4];
   sprintf(buffer, "%d", *temperature);
 
-  // Display 69
-  // seven_segment_display_69();
+  // Display temperature
   seven_segment_display_temp(buffer);
 }
 

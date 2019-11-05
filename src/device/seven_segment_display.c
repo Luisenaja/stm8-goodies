@@ -191,45 +191,6 @@ void seven_segment_display_number(char number) {
       break;
 
   }
-
-}
-
-void seven_segment_display_69(void) {
-  while(1) {
-    // 1 is on, 0 is off
-    write_output(D, 5, 1); // A
-    write_output(A, 2, 0); // B
-    write_output(C, 7, 1); // C
-    write_output(D, 3, 1); // D
-    write_output(D, 1, 1); // E
-    write_output(A, 1, 1); // F
-    write_output(C, 6, 1); // G
-    write_output(D, 2, 0); // P
-
-    // 1 is off, 0 is on
-    write_output(D, 4, 1); // 1
-    write_output(B, 5, 0); // 2
-    write_output(B, 4, 1); // 3
-
-    delay();
-
-    // 1 is on, 0 is off
-    write_output(D, 5, 1); // A
-    write_output(A, 2, 1); // B
-    write_output(C, 7, 1); // C
-    write_output(D, 3, 0); // D
-    write_output(D, 1, 0); // E
-    write_output(A, 1, 1); // F
-    write_output(C, 6, 1); // G
-    write_output(D, 2, 0); // P
-
-    // 1 is off, 0 is on
-    write_output(D, 4, 1); // 1
-    write_output(B, 5, 1); // 2
-    write_output(B, 4, 0); // 3
-
-    delay();
-  }
 }
 
 void seven_segment_display_temp(char* temp_str) {
