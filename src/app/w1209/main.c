@@ -46,11 +46,10 @@ void main(void) {
     buttons_init();
     thermistor_init();
     display_reading_init(&display_reading, thermistor_read_event());
-    // thermistor_toggler_init(&thermistor_toggler, thermistor_read_event());
     led_toggler_init(&button_toggler, button_press_event());
     led_toggler_init(&on_button_toggler, on_button_press_event());
     led_toggler_init(&off_button_toggler, off_button_press_event());
-    seven_segment_display_init();
+    seven_segment_display_init(tim4_system_tick_interrupt());
     // pa3_heartbeat_init(&timer_group);
   }
   enableInterrupts();
