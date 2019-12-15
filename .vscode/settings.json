@@ -3,10 +3,9 @@
     "editor.tabSize": 2,
     "editor.insertSpaces": true
   },
-  "editor.formatOnSave": true,
-  "files.associations": {
-    "pc5_heartbeat.h": "c",
-    "button.h": "c",
-    "display_reading.h": "c"
-  }
+  "[cpp]": {
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true
+  },
+  "editor.formatOnSave": true
 }

@@ -8,22 +8,17 @@
 #include "stm8s.h"
 #include "clock.h"
 #include "tim4_system_tick.h"
+#include "pc5_heartbeat.h"
 #include "tiny_timer.h"
 #include "watchdog.h"
-#include "led.h"
-#include "button.h"
-#include "led_toggler.h"
 
 static tiny_timer_group_t timer_group;
 static tiny_timer_t timer;
 
-void delay(void);
-
-static void kick_watchdog(tiny_timer_group_t* _timer_group, void* context) {
+static void kick_watchdog(tiny_timer_group_t* timer_group, void* context) {
   (void)context;
-  (void)_timer_group;
   watchdog_kick();
-  tiny_timer_start(&timer_group, &timer, 1, kick_watchdog, NULL);
+  tiny_timer_start(timer_group, &timer, 1, kick_watchdog, NULL);
 }
 
 void main(void) {
@@ -32,9 +27,7 @@ void main(void) {
     watchdog_init();
     clock_init();
     tiny_timer_group_init(&timer_group, tim4_system_tick_init());
-    led_init();
-    button_init();
-    led_toggler_init(button_press_event());
+    pc5_heartbeat_init(&timer_group);
   }
   enableInterrupts();
 
@@ -42,7 +35,6 @@ void main(void) {
 
   while(true) {
     tiny_timer_group_run(&timer_group);
-    button_run();
     wfi();
   }
 }
