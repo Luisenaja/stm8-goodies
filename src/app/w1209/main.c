@@ -44,7 +44,7 @@ void main(void) {
     tiny_timer_group_init(&timer_group, tim4_system_tick_init());
     led_init();
     buttons_init();
-    thermistor_init();
+    thermistor_init(&timer_group);
     display_reading_init(&display_reading, thermistor_read_event());
     led_toggler_init(&button_toggler, button_press_event());
     led_toggler_init(&on_button_toggler, on_button_press_event());
@@ -59,7 +59,6 @@ void main(void) {
   while(true) {
     tiny_timer_group_run(&timer_group);
     buttons_run();
-    thermistor_read();
     wfi();
   }
 }

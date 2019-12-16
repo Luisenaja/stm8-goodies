@@ -7,6 +7,7 @@
 #include <stddef.h>
 #include <stdbool.h>
 #include "thermistor.h"
+#include "tiny_timer.h"
 #include "adc1.h"
 #include "tiny_event.h"
 #include "tiny_utils.h"
@@ -27,15 +28,7 @@ typedef struct {
 } thermistor_t;
 
 static thermistor_t thermistor;
-
-void thermistor_init(void) {
-  thermistor.adc_group = adc1_init();
-  tiny_event_init(&thermistor.thermistor_read_event);
-}
-
-i_tiny_event_t* thermistor_read_event(void) {
-  return &thermistor.thermistor_read_event.interface;
-}
+static tiny_timer_t timer;
 
 static int get_temperature(tiny_adc_counts_t counts) {
   unsigned char right_bound_temp_index = ADC_RAW_TABLE_SIZE;
@@ -57,7 +50,7 @@ static int get_temperature(tiny_adc_counts_t counts) {
   return ADC_RAW_TABLE_BASE_TEMP + left_bound_temp_index;
 }
 
-void thermistor_read(void) {
+static void thermistor_read(tiny_timer_group_t* timer_group) {
   tiny_adc_counts_t counts = tiny_adc_group_read(thermistor.adc_group, 6);
 
   if(counts > ADC_COUNTS_MIN) {
@@ -68,4 +61,16 @@ void thermistor_read(void) {
   else {
     counts++;
   }
+  // Start tiny timer for 1000 ms (1 s)
+  tiny_timer_start(timer_group, &timer, 1000, thermistor_read, NULL);
+}
+
+void thermistor_init(tiny_timer_group_t* timer_group) {
+  thermistor.adc_group = adc1_init();
+  tiny_event_init(&thermistor.thermistor_read_event);
+  thermistor_read(timer_group);
+}
+
+i_tiny_event_t* thermistor_read_event(void) {
+  return &thermistor.thermistor_read_event.interface;
 }
