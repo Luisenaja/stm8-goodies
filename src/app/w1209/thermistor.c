@@ -10,6 +10,7 @@
 #include "tiny_timer.h"
 #include "adc1.h"
 #include "tiny_event.h"
+#include "tiny_timer.h"
 #include "tiny_utils.h"
 
 #define ADC_RAW_TABLE_SIZE sizeof raw_adc_counts / sizeof raw_adc_counts[0]
@@ -62,7 +63,8 @@ static uint8_t get_average_temperature(void) {
   return sum / size_temperatures;
 }
 
-static void thermistor_read(tiny_timer_group_t* timer_group) {
+static void thermistor_read(tiny_timer_group_t* timer_group, void* context) {
+  (void)context;
   tiny_adc_counts_t counts = tiny_adc_group_read(thermistor.adc_group, 6);
 
   if(counts > ADC_COUNTS_MIN) {
@@ -91,7 +93,7 @@ static void thermistor_read(tiny_timer_group_t* timer_group) {
 void thermistor_init(tiny_timer_group_t* timer_group) {
   thermistor.adc_group = adc1_init();
   tiny_event_init(&thermistor.thermistor_read_event);
-  thermistor_read(timer_group);
+  thermistor_read(timer_group, NULL);
 }
 
 i_tiny_event_t* thermistor_read_event(void) {
