@@ -8,6 +8,7 @@
 #include <stdbool.h>
 #include "buttons.h"
 #include "tiny_event.h"
+#include "tiny_timer.h"
 #include "tiny_utils.h"
 
 typedef struct {
@@ -17,6 +18,7 @@ typedef struct {
 } button_t;
 
 static button_t buttons[3];
+static tiny_timer_t timer;
 
 enum {
   pin_3 = (1 << 3),
@@ -24,34 +26,12 @@ enum {
   pin_5 = (1 << 5)
 };
 
-void buttons_init(void) {
-  buttons[0].pin_mask = pin_3;
-  buttons[1].pin_mask = pin_4;
-  buttons[2].pin_mask = pin_5;
-
-  for(uint8_t i = 0; i < element_count(buttons); i++) {
-    GPIOC->DDR &= ~buttons[i].pin_mask;
-    tiny_event_init(&buttons[i].press_event);
-  }
-}
-
-i_tiny_event_t* button_press_event(void) {
-  return &buttons[0].press_event.interface;
-}
-
-i_tiny_event_t* on_button_press_event(void) {
-  return &buttons[1].press_event.interface;
-}
-
-i_tiny_event_t* off_button_press_event(void) {
-  return &buttons[2].press_event.interface;
-}
-
 static bool button_pressed(button_t* button) {
   return (GPIOC->IDR & button->pin_mask) == 0;
 }
 
-void buttons_run(void) {
+static void buttons_run(tiny_timer_group_t* timer_group, void* context) {
+  (void)context;
   for(uint8_t i = 0; i < element_count(buttons); i++) {
     bool pressed = button_pressed(&buttons[i]);
 
@@ -65,4 +45,29 @@ void buttons_run(void) {
       buttons[i].handled_press = false;
     }
   }
+  tiny_timer_start(timer_group, &timer, 100, buttons_run, NULL);
+}
+
+void buttons_init(tiny_timer_group_t* timer_group) {
+  buttons[0].pin_mask = pin_3;
+  buttons[1].pin_mask = pin_4;
+  buttons[2].pin_mask = pin_5;
+
+  for(uint8_t i = 0; i < element_count(buttons); i++) {
+    GPIOC->DDR &= ~buttons[i].pin_mask;
+    tiny_event_init(&buttons[i].press_event);
+    buttons_run(timer_group, NULL);
+  }
+}
+
+i_tiny_event_t* button_press_event(void) {
+  return &buttons[0].press_event.interface;
+}
+
+i_tiny_event_t* on_button_press_event(void) {
+  return &buttons[1].press_event.interface;
+}
+
+i_tiny_event_t* off_button_press_event(void) {
+  return &buttons[2].press_event.interface;
 }

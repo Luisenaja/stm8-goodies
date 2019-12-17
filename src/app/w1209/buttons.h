@@ -8,11 +8,11 @@
 
 #include <stdbool.h>
 #include "i_tiny_event.h"
+#include "tiny_timer.h"
 
-void buttons_init(void);
+void buttons_init(tiny_timer_group_t* timer_group);
 i_tiny_event_t* button_press_event(void);
 i_tiny_event_t* on_button_press_event(void);
 i_tiny_event_t* off_button_press_event(void);
-void buttons_run(void);
 
 #endif
