@@ -15,7 +15,7 @@
 
 static void display_reading_callback(void* context, const void* args) {
   reinterpret(self, context, display_reading_t*);
-  reinterpret(temperature, args, const int*);
+  reinterpret(temperature, args, const uint8_t*);
 
   char buffer[4];
   sprintf(buffer, "%3d", *temperature);
