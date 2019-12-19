@@ -32,6 +32,7 @@ static bool button_pressed(button_t* button) {
 
 static void buttons_run(tiny_timer_group_t* timer_group, void* context) {
   (void)context;
+
   for(uint8_t i = 0; i < element_count(buttons); i++) {
     bool pressed = button_pressed(&buttons[i]);
 
@@ -45,7 +46,8 @@ static void buttons_run(tiny_timer_group_t* timer_group, void* context) {
       buttons[i].handled_press = false;
     }
   }
-  tiny_timer_start(timer_group, &timer, 100, buttons_run, NULL);
+
+  tiny_timer_start(timer_group, &timer, 10, buttons_run, NULL);
 }
 
 void buttons_init(tiny_timer_group_t* timer_group) {
@@ -55,9 +57,11 @@ void buttons_init(tiny_timer_group_t* timer_group) {
 
   for(uint8_t i = 0; i < element_count(buttons); i++) {
     GPIOC->DDR &= ~buttons[i].pin_mask;
+    GPIOC->CR1 |= buttons[i].pin_mask;
     tiny_event_init(&buttons[i].press_event);
-    buttons_run(timer_group, NULL);
   }
+
+  buttons_run(timer_group, NULL);
 }
 
 i_tiny_event_t* button_press_event(void) {
